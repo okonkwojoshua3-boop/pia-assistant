@@ -3,18 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f3f4f6;
+  --foreground: #111827;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
+html, body {
+  height: 100%;
+  overflow: hidden;
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
@@ -24,4 +19,26 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+/* Custom scrollbar for chat panel */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 4px;
+}
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background-color: #d1d5db;
+  border-radius: 2px;
+}
+
+/* PDF page shadow */
+.react-pdf__Page {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Annotation layer links */
+.react-pdf__Page__annotations.annotationLayer a {
+  color: #166534;
 }
