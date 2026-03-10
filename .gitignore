@@ -34,3 +34,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# fastembed model cache
+.fastembed_cache/
+
+# PDF source file (large binary, not versioned)
+public/pia-2021.pdf

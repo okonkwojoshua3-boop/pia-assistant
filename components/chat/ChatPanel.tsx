@@ -1,6 +1,6 @@
 'use client';
 
-import { X, Trash2 } from 'lucide-react';
+import { X, Trash2, Bot } from 'lucide-react';
 import { Message } from '@/types';
 import { ChatMessages } from './ChatMessages';
 import { ChatInput } from './ChatInput';
@@ -29,27 +29,37 @@ export function ChatPanel({
     <div
       className={cn(
         'fixed bottom-24 right-6 z-40 flex flex-col',
-        'w-[380px] max-w-[calc(100vw-2rem)]',
-        'h-[600px] max-h-[calc(100vh-8rem)]',
-        'bg-gray-50 rounded-2xl shadow-2xl border border-gray-200',
-        'transition-all duration-300 origin-bottom-right',
+        'w-[400px] max-w-[calc(100vw-2rem)]',
+        'h-[620px] max-h-[calc(100vh-8rem)]',
+        'bg-white rounded-2xl border border-gray-200',
+        'shadow-[0_8px_40px_rgba(0,0,0,0.18)]',
+        'transition-all duration-300 origin-bottom-right overflow-hidden',
         isOpen
           ? 'opacity-100 scale-100 pointer-events-auto'
           : 'opacity-0 scale-95 pointer-events-none'
       )}
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 bg-green-700 rounded-t-2xl">
-        <div>
-          <h2 className="text-white font-semibold text-sm">PIA 2021 Assistant</h2>
-          <p className="text-green-200 text-xs">Petroleum Industry Act</p>
+      <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-green-800 to-green-600 shrink-0">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+            <Bot size={16} className="text-white" />
+          </div>
+          <div>
+            <h2 className="text-white font-semibold text-sm leading-tight">PIA 2021 Assistant</h2>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-300 animate-pulse" />
+              <p className="text-green-100 text-[11px]">AI Legal Assistant</p>
+            </div>
+          </div>
         </div>
         <div className="flex items-center gap-1">
           {messages.length > 0 && (
             <button
               onClick={onClear}
               aria-label="Clear conversation"
-              className="p-1.5 text-green-200 hover:text-white hover:bg-green-800 rounded-lg transition-colors"
+              className="p-1.5 text-green-200 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+              title="Clear conversation"
             >
               <Trash2 size={14} />
             </button>
@@ -57,9 +67,9 @@ export function ChatPanel({
           <button
             onClick={onClose}
             aria-label="Close chat"
-            className="p-1.5 text-green-200 hover:text-white hover:bg-green-800 rounded-lg transition-colors"
+            className="p-1.5 text-green-200 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
           >
-            <X size={14} />
+            <X size={16} />
           </button>
         </div>
       </div>

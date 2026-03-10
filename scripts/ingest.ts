@@ -4,7 +4,7 @@
  *
  * Prerequisites:
  *  - public/pia-2021.pdf must exist
- *  - .env.local must have SUPABASE_SERVICE_ROLE_KEY, NEXT_PUBLIC_SUPABASE_URL, OPENAI_API_KEY
+ *  - .env.local must have SUPABASE_SERVICE_ROLE_KEY, NEXT_PUBLIC_SUPABASE_URL
  */
 
 import * as fs from 'fs';
@@ -15,7 +15,7 @@ import * as dotenv from 'dotenv';
 dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
 
 import { createClient } from '@supabase/supabase-js';
-import OpenAI from 'openai';
+import { EmbeddingModel, FlagEmbedding } from 'fastembed';
 // @ts-ignore — pdf-parse has loose typings
 import pdfParse from 'pdf-parse';
 import pLimit from 'p-limit';
@@ -25,23 +25,21 @@ import pLimit from 'p-limit';
 // ---------------------------------------------------------------------------
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-const OPENAI_KEY = process.env.OPENAI_API_KEY!;
 
-if (!SUPABASE_URL || !SERVICE_KEY || !OPENAI_KEY) {
-  console.error('Missing env vars. Check .env.local.');
+if (!SUPABASE_URL || !SERVICE_KEY) {
+  console.error('Missing env vars. Check .env.local for NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.');
   process.exit(1);
 }
 
 const supabase = createClient(SUPABASE_URL, SERVICE_KEY, {
   auth: { persistSession: false },
 });
-const openai = new OpenAI({ apiKey: OPENAI_KEY });
 
 const PDF_PATH = path.resolve(__dirname, '../public/pia-2021.pdf');
 const CHUNK_TOKENS = 600;
 const OVERLAP_TOKENS = 50;
-const BATCH_SIZE = 20;
-const CONCURRENCY = 3;
+const BATCH_SIZE = 50;
+const CONCURRENCY = 1;
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -71,11 +69,6 @@ function chunkText(text: string, maxTokens = CHUNK_TOKENS, overlap = OVERLAP_TOK
   }
 
   return chunks.filter((c) => c.trim().length > 20);
-}
-
-interface PageInfo {
-  pageNumber: number;
-  text: string;
 }
 
 interface ChunkRecord {
@@ -134,13 +127,11 @@ async function main() {
   // Pass 1: detect chapters
   // ---------------------------------------------------------------------------
   const chaptersMap: Map<number, { number: number; title: string; pageStart: number }> = new Map();
-  let currentChapter: { number: number; title: string; pageStart: number } | null = null;
 
   for (let i = 0; i < pageTexts.length; i++) {
     const ch = detectChapter(pageTexts[i]);
     if (ch && !chaptersMap.has(ch.number)) {
-      currentChapter = { number: ch.number, title: ch.title, pageStart: i + 1 };
-      chaptersMap.set(ch.number, currentChapter);
+      chaptersMap.set(ch.number, { number: ch.number, title: ch.title, pageStart: i + 1 });
     }
   }
 
@@ -237,8 +228,15 @@ async function main() {
   console.log(`📦  Total chunks: ${allChunks.length}`);
 
   // ---------------------------------------------------------------------------
-  // Pass 4: embed in batches
+  // Pass 4: embed in batches using fastembed (local, no API key)
   // ---------------------------------------------------------------------------
+  console.log('🔧  Initialising fastembed model (may download ~25MB on first run)...');
+  const embeddingModel = await FlagEmbedding.init({
+    model: EmbeddingModel.BGESmallENV15,
+    cacheDir: '.fastembed_cache',
+  });
+  console.log('✅  Model ready');
+
   const limit = pLimit(CONCURRENCY);
   let embedded = 0;
 
@@ -252,14 +250,17 @@ async function main() {
       limit(async () => {
         const texts = batch.map((c) => c.content);
 
-        const response = await openai.embeddings.create({
-          model: 'text-embedding-3-small',
-          input: texts,
-        });
+        const embeddings: number[][] = [];
+        const results = embeddingModel.embed(texts, texts.length);
+        for await (const batchVecs of results) {
+          for (const vec of batchVecs) {
+            embeddings.push(Array.from(vec));
+          }
+        }
 
         const rows = batch.map((chunk, j) => ({
           ...chunk,
-          embedding: response.data[j].embedding,
+          embedding: embeddings[j],
         }));
 
         const { error } = await supabase.from('document_chunks').insert(rows);

@@ -27,19 +27,27 @@ export function PDFToolbar({
   onPageChange,
 }: PDFToolbarProps) {
   return (
-    <div className="flex items-center justify-between px-4 py-2 bg-gray-800 text-white text-sm">
+    <div className="flex items-center justify-between px-4 py-2.5 bg-white border-b border-gray-200 shadow-sm text-sm">
+      {/* Branding */}
+      <div className="flex items-center gap-2 min-w-[120px]">
+        <div className="w-6 h-6 rounded-md bg-green-700 flex items-center justify-center">
+          <span className="text-white text-[10px] font-bold">PIA</span>
+        </div>
+        <span className="text-gray-700 font-semibold text-xs hidden sm:block">Petroleum Industry Act</span>
+      </div>
+
       {/* Page Navigation */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5">
         <button
           onClick={onPrev}
           disabled={currentPage <= 1}
           aria-label="Previous page"
-          className="p-1.5 rounded hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="p-1.5 rounded-lg text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
         >
           <ChevronLeft size={16} />
         </button>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1">
           <input
             type="number"
             min={1}
@@ -50,9 +58,8 @@ export function PDFToolbar({
               if (!isNaN(val)) onPageChange(val);
             }}
             className={cn(
-              'w-12 text-center bg-gray-700 rounded px-1.5 py-0.5',
-              'text-white text-xs border border-gray-600',
-              'focus:outline-none focus:border-green-400',
+              'w-10 text-center bg-transparent text-gray-700 text-xs font-medium',
+              'focus:outline-none',
               '[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none'
             )}
           />
@@ -63,26 +70,26 @@ export function PDFToolbar({
           onClick={onNext}
           disabled={currentPage >= totalPages}
           aria-label="Next page"
-          className="p-1.5 rounded hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="p-1.5 rounded-lg text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
         >
           <ChevronRight size={16} />
         </button>
       </div>
 
       {/* Zoom Controls */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1 min-w-[120px] justify-end">
         <button
           onClick={onZoomOut}
           disabled={scale <= 0.5}
           aria-label="Zoom out"
-          className="p-1.5 rounded hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="p-1.5 rounded-lg text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
         >
-          <ZoomOut size={16} />
+          <ZoomOut size={15} />
         </button>
 
         <button
           onClick={onResetZoom}
-          className="px-2 py-0.5 rounded text-xs hover:bg-gray-700 transition-colors min-w-[48px] text-center"
+          className="px-2 py-1 rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-100 transition-colors min-w-[44px] text-center"
         >
           {Math.round(scale * 100)}%
         </button>
@@ -91,17 +98,17 @@ export function PDFToolbar({
           onClick={onZoomIn}
           disabled={scale >= 3.0}
           aria-label="Zoom in"
-          className="p-1.5 rounded hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="p-1.5 rounded-lg text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
         >
-          <ZoomIn size={16} />
+          <ZoomIn size={15} />
         </button>
 
         <button
           onClick={onResetZoom}
           aria-label="Reset zoom"
-          className="p-1.5 rounded hover:bg-gray-700 transition-colors"
+          className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
         >
-          <RotateCcw size={14} />
+          <RotateCcw size={13} />
         </button>
       </div>
     </div>

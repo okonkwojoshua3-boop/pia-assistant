@@ -1,7 +1,11 @@
-import Anthropic from '@anthropic-ai/sdk';
+import Groq from 'groq-sdk';
 import { MatchResult, Citation } from '@/types';
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+let _groq: Groq | null = null;
+function getGroq(): Groq {
+  if (!_groq) _groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+  return _groq;
+}
 
 const SYSTEM_PROMPT = `You are a legal assistant specialising exclusively in the Petroleum Industry Act (PIA) 2021 of Nigeria.
 
@@ -43,23 +47,22 @@ export async function generateAnswer(
 
   const excerpts = buildExcerptsBlock(chunks);
 
-  const messages: Anthropic.MessageParam[] = [
-    ...history.map((h) => ({ role: h.role, content: h.content })),
+  const messages: Groq.Chat.ChatCompletionMessageParam[] = [
+    { role: 'system', content: SYSTEM_PROMPT },
+    ...history.map((h) => ({ role: h.role, content: h.content } as Groq.Chat.ChatCompletionMessageParam)),
     {
       role: 'user',
       content: `<excerpts>\n${excerpts}\n</excerpts>\n\nQuestion: ${question}`,
     },
   ];
 
-  const response = await anthropic.messages.create({
-    model: 'claude-sonnet-4-6',
+  const response = await getGroq().chat.completions.create({
+    model: 'llama-3.3-70b-versatile',
     max_tokens: 1024,
-    system: SYSTEM_PROMPT,
     messages,
   });
 
-  const answer =
-    response.content[0].type === 'text' ? response.content[0].text : '';
+  const answer = response.choices[0]?.message?.content ?? '';
 
   // Deduplicate citations by page_number
   const seen = new Set<number>();

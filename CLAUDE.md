@@ -23,18 +23,20 @@ This is a RAG (Retrieval-Augmented Generation) app for querying the Petroleum In
 ```
 User question
   → POST /api/chat  (app/api/chat/route.ts)
-  → lib/rag/embed.ts       — OpenAI text-embedding-3-small → vector[1536]
+  → lib/rag/embed.ts       — fastembed BAAI/bge-small-en-v1.5 (local, no API) → vector[384]
   → lib/rag/retrieve.ts    — Supabase pgvector RPC match_document_chunks → top-5 chunks
-  → lib/rag/generate.ts    — Claude claude-sonnet-4-6 with system prompt + excerpts → {answer, citations}
+  → lib/rag/generate.ts    — Groq llama-3.3-70b-versatile (free) with system prompt + excerpts → {answer, citations}
   → JSON response → CitationCard click → setTargetPage → PDFViewer scrolls + flashes highlight
 ```
 
 ### Key design constraints
 
 - **PDFViewer is `dynamic(..., { ssr: false })`** — pdfjs cannot run server-side.
-- **PDF worker uses unpkg CDN URL** (not a local import). Importing the `.mjs` worker directly causes a Terser `import.meta` error during `next build`. See `lib/pdf/pdfWorker.ts`.
+- **PDF worker served from unpkg CDN** via `pdfWorker.ts`. The current workerSrc uses the CDN URL pattern. If the `TypeError: Properties can only be defined on Objects` error appears, copy the worker locally: `cp node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/pdf.worker.min.mjs` and set `workerSrc = '/pdf.worker.min.mjs'`.
 - **Supabase clients are lazy-initialized** (created on first call, not at module load). Eager creation throws `"supabaseUrl is required"` at build time when env vars are absent. See `lib/supabase/server.ts` and `lib/supabase/client.ts`.
 - **`SUPABASE_SERVICE_ROLE_KEY` is server-only** — never prefix with `NEXT_PUBLIC_`. It is only used in `lib/supabase/server.ts` and `scripts/ingest.ts`.
+- **Embeddings dimension is 384** (fastembed BGE-small), NOT 1536. Supabase migration `002_update_embedding_dim.sql` must be run before ingestion.
+- **PDFViewer renders all pages** vertically (not one-at-a-time). IntersectionObserver tracks current page. Citation clicks scroll smoothly to target page.
 
 ### State management
 
@@ -59,7 +61,18 @@ Three tables: `chapters → sections → document_chunks`. The `document_chunks`
 | `NEXT_PUBLIC_SUPABASE_URL` | client + server |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | browser client only |
 | `SUPABASE_SERVICE_ROLE_KEY` | server + ingest script |
-| `OPENAI_API_KEY` | embeddings (server + ingest) |
-| `ANTHROPIC_API_KEY` | Claude generation (server) |
+| `GROQ_API_KEY` | generation via Groq (free tier) |
 | `MATCH_THRESHOLD` | similarity cutoff, default `0.70` |
 | `MATCH_COUNT` | top-k results, default `5` |
+
+> `OPENAI_API_KEY` and `ANTHROPIC_API_KEY` are no longer required — replaced by Groq (generation) and fastembed (local embeddings).
+
+## UI improvements applied
+
+- **PDFToolbar**: White background, PIA logo badge, modern light buttons
+- **ChatPanel**: Gradient header (green-800→green-600), bot avatar, animated status dot, deeper shadow
+- **FloatingAIButton**: Pulsing ring when closed, scale-on-hover, icon rotation on toggle
+- **MessageBubble**: "You" / "AI Assistant" sender labels above each bubble
+- **ChatMessages**: Richer empty state with gradient icon + 3 sample question chips
+- **CitationCard**: Rounder corners, bolder label, cleaner layout
+- **globals.css**: Deeper background (#e8eaed), refined PDF page shadow

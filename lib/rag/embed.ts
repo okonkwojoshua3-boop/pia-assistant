@@ -1,19 +1,34 @@
-import OpenAI from 'openai';
+import { EmbeddingModel, FlagEmbedding } from 'fastembed';
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+let _model: FlagEmbedding | null = null;
+
+async function getModel(): Promise<FlagEmbedding> {
+  if (!_model) {
+    _model = await FlagEmbedding.init({
+      model: EmbeddingModel.BGESmallENV15,
+      cacheDir: '.fastembed_cache',
+    });
+  }
+  return _model;
+}
 
 export async function embedText(text: string): Promise<number[]> {
-  const response = await openai.embeddings.create({
-    model: 'text-embedding-3-small',
-    input: text,
-  });
-  return response.data[0].embedding;
+  const model = await getModel();
+  const results = model.embed([text], 1);
+  for await (const batch of results) {
+    return Array.from(batch[0]);
+  }
+  throw new Error('embedText: no output from model');
 }
 
 export async function embedBatch(texts: string[]): Promise<number[][]> {
-  const response = await openai.embeddings.create({
-    model: 'text-embedding-3-small',
-    input: texts,
-  });
-  return response.data.map((d) => d.embedding);
+  const model = await getModel();
+  const embeddings: number[][] = [];
+  const results = model.embed(texts, texts.length);
+  for await (const batch of results) {
+    for (const vec of batch) {
+      embeddings.push(Array.from(vec));
+    }
+  }
+  return embeddings;
 }
