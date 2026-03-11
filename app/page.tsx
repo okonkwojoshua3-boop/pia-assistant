@@ -37,7 +37,7 @@ export default function Home() {
   );
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full overflow-hidden">
       {/* Toolbar */}
       <PDFToolbar
         currentPage={nav.currentPage}
@@ -51,33 +51,39 @@ export default function Home() {
         onPageChange={nav.goToPage}
       />
 
-      {/* PDF Viewer */}
-      <main className="flex-1 overflow-auto bg-gray-200 p-4">
-        <PDFViewer
-          currentPage={nav.currentPage}
-          scale={nav.scale}
-          targetPage={nav.targetPage}
-          onDocumentLoad={handleDocumentLoad}
-          onPageChange={nav.setCurrentPage}
-          onTargetConsumed={nav.clearTarget}
+      {/* Content area: PDF viewer + sliding chat panel */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* PDF Viewer — shrinks when chat opens */}
+        <main className="flex-1 overflow-auto bg-gray-200 p-4 transition-all duration-300 ease-in-out min-w-0">
+          <PDFViewer
+            currentPage={nav.currentPage}
+            scale={nav.scale}
+            targetPage={nav.targetPage}
+            onDocumentLoad={handleDocumentLoad}
+            onPageChange={nav.setCurrentPage}
+            onTargetConsumed={nav.clearTarget}
+          />
+        </main>
+
+        {/* Chat panel — slides in from the right */}
+        <ChatPanel
+          isOpen={isChatOpen}
+          messages={chat.messages}
+          isLoading={chat.isLoading}
+          onSend={chat.sendMessage}
+          onClose={() => setIsChatOpen(false)}
+          onClear={chat.clearMessages}
+          onCitationClick={handleCitationClick}
         />
-      </main>
+      </div>
 
-      {/* Chat UI */}
-      <ChatPanel
-        isOpen={isChatOpen}
-        messages={chat.messages}
-        isLoading={chat.isLoading}
-        onSend={chat.sendMessage}
-        onClose={() => setIsChatOpen(false)}
-        onClear={chat.clearMessages}
-        onCitationClick={handleCitationClick}
-      />
-
-      <FloatingAIButton
-        isOpen={isChatOpen}
-        onClick={() => setIsChatOpen((o) => !o)}
-      />
+      {/* Floating button — only shown when chat is closed */}
+      {!isChatOpen && (
+        <FloatingAIButton
+          isOpen={isChatOpen}
+          onClick={() => setIsChatOpen((o) => !o)}
+        />
+      )}
     </div>
   );
 }

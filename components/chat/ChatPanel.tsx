@@ -28,15 +28,11 @@ export function ChatPanel({
   return (
     <div
       className={cn(
-        'fixed bottom-24 right-6 z-40 flex flex-col',
-        'w-[400px] max-w-[calc(100vw-2rem)]',
-        'h-[620px] max-h-[calc(100vh-8rem)]',
-        'bg-white rounded-2xl border border-gray-200',
-        'shadow-[0_8px_40px_rgba(0,0,0,0.18)]',
-        'transition-all duration-300 origin-bottom-right overflow-hidden',
-        isOpen
-          ? 'opacity-100 scale-100 pointer-events-auto'
-          : 'opacity-0 scale-95 pointer-events-none'
+        'flex flex-col h-full shrink-0 overflow-hidden',
+        'bg-white border-l border-gray-200',
+        'shadow-[-4px_0_24px_rgba(0,0,0,0.08)]',
+        'transition-[width] duration-300 ease-in-out',
+        isOpen ? 'w-1/3' : 'w-0'
       )}
     >
       {/* Header */}
