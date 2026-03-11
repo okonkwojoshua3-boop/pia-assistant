@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverComponentsExternalPackages: ['pdf-parse', 'fastembed', 'onnxruntime-node', '@anush008/tokenizers'],
+    serverComponentsExternalPackages: ['pdf-parse', '@xenova/transformers'],
   },
   webpack: (config) => {
     // Prevent canvas from being bundled (used by pdfjs in Node envs)

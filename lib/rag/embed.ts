@@ -1,34 +1,28 @@
-import { EmbeddingModel, FlagEmbedding } from 'fastembed';
+import { pipeline, env } from '@xenova/transformers';
 
-let _model: FlagEmbedding | null = null;
+// On Vercel, /tmp is the only writable directory
+env.cacheDir = '/tmp/transformers-cache';
 
-async function getModel(): Promise<FlagEmbedding> {
-  if (!_model) {
-    _model = await FlagEmbedding.init({
-      model: EmbeddingModel.BGESmallENV15,
-      cacheDir: '.fastembed_cache',
-    });
+type EmbeddingPipeline = Awaited<ReturnType<typeof pipeline>>;
+let _embedder: EmbeddingPipeline | null = null;
+
+async function getEmbedder(): Promise<EmbeddingPipeline> {
+  if (!_embedder) {
+    _embedder = await pipeline('feature-extraction', 'Xenova/bge-small-en-v1.5');
   }
-  return _model;
+  return _embedder;
+}
+
+async function embed(text: string): Promise<number[]> {
+  const embedder = await getEmbedder();
+  const output = await (embedder as any)(text, { pooling: 'mean', normalize: true });
+  return Array.from(output.data) as number[];
 }
 
 export async function embedText(text: string): Promise<number[]> {
-  const model = await getModel();
-  const results = model.embed([text], 1);
-  for await (const batch of results) {
-    return Array.from(batch[0]);
-  }
-  throw new Error('embedText: no output from model');
+  return embed(text);
 }
 
 export async function embedBatch(texts: string[]): Promise<number[][]> {
-  const model = await getModel();
-  const embeddings: number[][] = [];
-  const results = model.embed(texts, texts.length);
-  for await (const batch of results) {
-    for (const vec of batch) {
-      embeddings.push(Array.from(vec));
-    }
-  }
-  return embeddings;
+  return Promise.all(texts.map(embed));
 }
