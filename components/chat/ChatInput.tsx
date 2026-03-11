@@ -39,7 +39,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
 
   return (
     <div className="p-3 border-t border-gray-100 bg-white rounded-b-2xl">
-      <div className="flex items-end gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 focus-within:border-green-400 focus-within:ring-2 focus-within:ring-green-100 transition-all">
+      <div className="flex items-end gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 focus-within:border-brand-400 focus-within:ring-2 focus-within:ring-brand-100 transition-all">
         <textarea
           ref={textareaRef}
           value={value}
@@ -61,9 +61,9 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
           aria-label="Send message"
           className={cn(
             'w-8 h-8 flex items-center justify-center rounded-lg shrink-0',
-            'bg-green-700 text-white transition-all',
-            'hover:bg-green-800 disabled:opacity-30 disabled:cursor-not-allowed',
-            'focus:outline-none focus:ring-2 focus:ring-green-400'
+            'bg-brand-700 text-white transition-all',
+            'hover:bg-brand-800 disabled:opacity-30 disabled:cursor-not-allowed',
+            'focus:outline-none focus:ring-2 focus:ring-brand-400'
           )}
         >
           <Send size={14} />

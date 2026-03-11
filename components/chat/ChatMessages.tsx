@@ -19,7 +19,7 @@ export function ChatMessages({ messages, onCitationClick }: ChatMessagesProps) {
   if (messages.length === 0) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-6 text-center gap-4">
-        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-600 to-green-800 flex items-center justify-center shadow-md">
+        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand-600 to-brand-800 flex items-center justify-center shadow-md">
           <span className="text-2xl">⚖️</span>
         </div>
         <div>

@@ -30,7 +30,7 @@ export function PDFToolbar({
     <div className="flex items-center justify-between px-4 py-2.5 bg-white border-b border-gray-200 shadow-sm text-sm">
       {/* Branding */}
       <div className="flex items-center gap-2 min-w-[120px]">
-        <div className="w-6 h-6 rounded-md bg-green-700 flex items-center justify-center">
+        <div className="w-6 h-6 rounded-md bg-brand-700 flex items-center justify-center">
           <span className="text-white text-[10px] font-bold">PIA</span>
         </div>
         <span className="text-gray-700 font-semibold text-xs hidden sm:block">Petroleum Industry Act</span>

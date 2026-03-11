@@ -12,7 +12,7 @@ export function FloatingAIButton({ isOpen, onClick }: FloatingAIButtonProps) {
   return (
     <div className="fixed bottom-6 right-6 z-50">
       {!isOpen && (
-        <span className="absolute inset-0 rounded-full bg-green-500 opacity-30 animate-ping" />
+        <span className="absolute inset-0 rounded-full bg-brand-500 opacity-30 animate-ping" />
       )}
       <button
         onClick={onClick}
@@ -20,8 +20,8 @@ export function FloatingAIButton({ isOpen, onClick }: FloatingAIButtonProps) {
         className={cn(
           'relative w-14 h-14 rounded-full shadow-lg',
           'flex items-center justify-center transition-all duration-300',
-          'bg-green-700 hover:bg-green-800 text-white',
-          'focus:outline-none focus:ring-4 focus:ring-green-400',
+          'bg-brand-700 hover:bg-brand-800 text-white',
+          'focus:outline-none focus:ring-4 focus:ring-brand-400',
           !isOpen && 'hover:scale-110'
         )}
       >

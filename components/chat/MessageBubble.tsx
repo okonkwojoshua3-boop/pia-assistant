@@ -22,7 +22,7 @@ export function MessageBubble({ message, onCitationClick }: MessageBubbleProps) 
         className={cn(
           'max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed',
           isUser
-            ? 'bg-green-700 text-white rounded-tr-sm'
+            ? 'bg-brand-700 text-white rounded-tr-sm'
             : 'bg-gray-50 border border-gray-200 text-gray-800 rounded-tl-sm shadow-sm'
         )}
       >
