@@ -29,23 +29,23 @@ export function ChatPanel({
     <div
       className={cn(
         'flex flex-col h-full shrink-0 overflow-hidden',
-        'bg-white border-l border-gray-200',
-        'shadow-[-4px_0_24px_rgba(0,0,0,0.08)]',
+        'bg-[#1e293b] border-l border-slate-700/60',
+        'shadow-[-4px_0_24px_rgba(0,0,0,0.3)]',
         'transition-[width] duration-300 ease-in-out',
         isOpen ? 'w-1/3' : 'w-0'
       )}
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-brand-800 to-brand-600 shrink-0">
+      <div className="flex items-center justify-between px-4 py-3 bg-[#0f172a] border-b border-slate-700/60 shrink-0">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-            <Bot size={16} className="text-white" />
+          <div className="w-8 h-8 rounded-full bg-brand-700/30 border border-brand-600/40 flex items-center justify-center">
+            <Bot size={16} className="text-brand-400" />
           </div>
           <div>
-            <h2 className="text-white font-semibold text-sm leading-tight">PIA 2021 Assistant</h2>
+            <h2 className="text-slate-100 font-semibold text-sm leading-tight">PIA 2021 Assistant</h2>
             <div className="flex items-center gap-1.5 mt-0.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-300 animate-pulse" />
-              <p className="text-brand-100 text-[11px]">AI Legal Assistant</p>
+              <span className="w-1.5 h-1.5 rounded-full bg-brand-400 animate-pulse" />
+              <p className="text-slate-500 text-[11px]">AI Legal Assistant</p>
             </div>
           </div>
         </div>
@@ -54,7 +54,7 @@ export function ChatPanel({
             <button
               onClick={onClear}
               aria-label="Clear conversation"
-              className="p-1.5 text-brand-200 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+              className="p-1.5 text-slate-500 hover:text-slate-300 hover:bg-slate-800 rounded-lg transition-colors"
               title="Clear conversation"
             >
               <Trash2 size={14} />
@@ -63,7 +63,7 @@ export function ChatPanel({
           <button
             onClick={onClose}
             aria-label="Close chat"
-            className="p-1.5 text-brand-200 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+            className="p-1.5 text-slate-500 hover:text-slate-300 hover:bg-slate-800 rounded-lg transition-colors"
           >
             <X size={16} />
           </button>
