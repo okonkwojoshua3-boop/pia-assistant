@@ -7,9 +7,10 @@ import { MessageBubble } from './MessageBubble';
 interface ChatMessagesProps {
   messages: Message[];
   onCitationClick: (page: number) => void;
+  onSend?: (message: string) => void;
 }
 
-export function ChatMessages({ messages, onCitationClick }: ChatMessagesProps) {
+export function ChatMessages({ messages, onCitationClick, onSend }: ChatMessagesProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -34,12 +35,13 @@ export function ChatMessages({ messages, onCitationClick }: ChatMessagesProps) {
             'What is the role of NUPRC?',
             'How are royalties calculated?',
           ].map((q) => (
-            <div
+            <button
               key={q}
-              className="text-xs text-left px-3 py-2 rounded-xl border border-[#333333] bg-[#1e1e1e] text-[#888888] hover:border-accent-500/50 hover:text-[#aaaaaa] cursor-default transition-colors"
+              onClick={() => onSend?.(q)}
+              className="text-xs text-left px-3 py-2 rounded-xl border border-[#333333] bg-[#1e1e1e] text-[#888888] hover:border-accent-500/50 hover:text-[#aaaaaa] hover:bg-[#252525] transition-colors cursor-pointer"
             >
               {q}
-            </div>
+            </button>
           ))}
         </div>
       </div>

@@ -32,7 +32,7 @@ export function ChatPanel({
         'bg-[#111111] border-l border-[#222222]',
         'shadow-[-4px_0_32px_rgba(0,0,0,0.5)]',
         'transition-[width] duration-300 ease-in-out',
-        isOpen ? 'w-1/3' : 'w-0'
+        isOpen ? 'w-[40%]' : 'w-0'
       )}
     >
       {/* Header */}
@@ -62,7 +62,7 @@ export function ChatPanel({
       </div>
 
       {/* Messages */}
-      <ChatMessages messages={messages} onCitationClick={onCitationClick} />
+      <ChatMessages messages={messages} onCitationClick={onCitationClick} onSend={onSend} />
 
       {/* Input */}
       <ChatInput onSend={onSend} disabled={isLoading} />

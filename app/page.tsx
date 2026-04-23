@@ -16,7 +16,7 @@ const PDFViewer = dynamic(
 
 export default function Home() {
   const [totalPages, setTotalPages] = useState(0);
-  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(true);
 
   const nav = usePDFNavigation(totalPages);
   const chat = useChat();
