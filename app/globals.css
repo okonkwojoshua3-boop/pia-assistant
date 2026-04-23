@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --background: #0f172a;
-  --foreground: #f1f5f9;
+  --background: #eeeeee;
+  --foreground: #1a1a1a;
 }
 
 html, body {
@@ -28,17 +28,17 @@ html, body {
   background: transparent;
 }
 .overflow-y-auto::-webkit-scrollbar-thumb {
-  background-color: #334155;
+  background-color: #444444;
   border-radius: 2px;
 }
 
-/* PDF page shadow — stronger on dark canvas */
+/* PDF page shadow */
 .react-pdf__Page {
-  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.6), 0 1px 6px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.08);
   border-radius: 2px;
 }
 
 /* Annotation layer links */
 .react-pdf__Page__annotations.annotationLayer a {
-  color: #4ade80;
+  color: #e07050;
 }

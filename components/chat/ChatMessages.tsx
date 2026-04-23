@@ -19,12 +19,12 @@ export function ChatMessages({ messages, onCitationClick }: ChatMessagesProps) {
   if (messages.length === 0) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-6 text-center gap-4">
-        <div className="w-14 h-14 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center shadow-lg">
+        <div className="w-14 h-14 rounded-2xl bg-[#1e1e1e] border border-[#333333] flex items-center justify-center shadow-lg">
           <span className="text-2xl">⚖️</span>
         </div>
         <div>
-          <h3 className="font-semibold text-slate-200 mb-1">PIA 2021 Legal Assistant</h3>
-          <p className="text-xs text-slate-500 max-w-[220px]">
+          <h3 className="font-semibold text-[#cccccc] mb-1">PIA 2021 Legal Assistant</h3>
+          <p className="text-xs text-[#666666] max-w-[220px]">
             Ask any question about the Petroleum Industry Act 2021. I'll cite the exact section and page.
           </p>
         </div>
@@ -36,7 +36,7 @@ export function ChatMessages({ messages, onCitationClick }: ChatMessagesProps) {
           ].map((q) => (
             <div
               key={q}
-              className="text-xs text-left px-3 py-2 rounded-xl border border-slate-700 bg-slate-800/50 text-slate-400 cursor-default"
+              className="text-xs text-left px-3 py-2 rounded-xl border border-[#333333] bg-[#1e1e1e] text-[#888888] hover:border-accent-500/50 hover:text-[#aaaaaa] cursor-default transition-colors"
             >
               {q}
             </div>

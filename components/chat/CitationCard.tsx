@@ -22,15 +22,15 @@ export function CitationCard({ citation, onClick }: CitationCardProps) {
       onClick={() => onClick(citation.page_number)}
       className={cn(
         'flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs',
-        'bg-slate-800 border border-slate-700 text-slate-300',
-        'hover:bg-slate-700 hover:border-brand-500/60 hover:text-slate-100 hover:shadow-sm transition-all',
-        'focus:outline-none focus:ring-2 focus:ring-brand-500/40'
+        'bg-accent-500/15 border border-accent-500/40 text-accent-400',
+        'hover:bg-accent-500/25 hover:border-accent-500/70 hover:text-accent-300 hover:shadow-sm transition-all',
+        'focus:outline-none focus:ring-2 focus:ring-accent-500/40'
       )}
       title={citation.chapter_title ?? undefined}
     >
-      <FileText size={11} className="shrink-0 text-brand-400" />
+      <FileText size={11} className="shrink-0 text-accent-500" />
       <span className="font-semibold">{label}</span>
-      <span className="text-slate-500 font-normal">p. {citation.page_number}</span>
+      <span className="text-accent-400/70 font-normal">p. {citation.page_number}</span>
     </button>
   );
 }

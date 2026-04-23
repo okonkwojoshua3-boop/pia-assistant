@@ -54,7 +54,7 @@ export default function Home() {
       {/* Content area: PDF viewer + sliding chat panel */}
       <div className="flex flex-1 overflow-hidden">
         {/* PDF Viewer — shrinks when chat opens */}
-        <main className="flex-1 overflow-auto bg-[#0f172a] p-6 transition-all duration-300 ease-in-out min-w-0">
+        <main className="flex-1 overflow-auto bg-[#eeeeee] p-6 transition-all duration-300 ease-in-out min-w-0">
           <PDFViewer
             currentPage={nav.currentPage}
             scale={nav.scale}
